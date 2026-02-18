@@ -1,6 +1,8 @@
 import requests
 from bs4 import BeautifulSoup
-
+import smtplib
+import os
+from email.message import EmailMessage
 
 def analizza_e_stampa_risultato(url):
     headers = {
@@ -37,28 +39,54 @@ def analizza_e_stampa_risultato(url):
         if tabella_standard and len(righe_tabella) > 1:
             print("✅ USA BEAUTIFUL SOUP")
             print("MOTIVO: Ho trovato una tabella HTML standard con dati dentro.")
+            return "✅ USA BEAUTIFUL SOUP"
 
         elif len(tag_dinamici) > 0 and not tabella_standard:
             print("❌ USA PLAYWRIGHT")
             print("MOTIVO: Ci sono componenti 'tm-' ma nessuna tabella reale.")
             print("I dati sono probabilmente caricati via JavaScript.")
+            return "❌ USA PLAYWRIGHT"
 
         elif len(classi_svelte) > 0 and len(soup.text.strip()) < 500:
             print("❌ USA PLAYWRIGHT")
             print("MOTIVO: Il sito usa Svelte e c'è pochissimo testo nell'HTML.")
+            return "❌ USA PLAYWRIGHT"
 
         else:
             print("🤔 VERDETTO INCERTO")
             print("MOTIVO: La struttura è ambigua. Prova prima con BS4, se fallisce passa a PW.")
-
-        print("=" * 40 + "\n")
+            return "🤔 VERDETTO INCERTO"
 
     except Exception as e:
         print(f"❌ ERRORE DURANTE LA RICHIESTA: {e}")
 
 
-# --- ESEGUI QUI ---
-# Sostituisci con l'URL che vuoi testare
-url_test = "https://www.transfermarkt.it/federico-pace/leistungsdatendetails/spieler/469899"
-url_bs = "https://www.transfermarkt.it/potenza-calcio/startseite/verein/7197"
-analizza_e_stampa_risultato(url_test)
+def invia_mail(testo_report):
+    user = os.getenv('MAIL_USERNAME')
+    password = os.getenv('MAIL_PASSWORD')
+
+    msg = EmailMessage()
+    msg.set_content(testo_report)
+    msg['Subject'] = 'Report Analisi Scraping TM'
+    msg['From'] = user
+    msg['To'] = user
+
+    try:
+        # Passiamo alla porta 587 che è più stabile per gli script
+        server = smtplib.SMTP('smtp.gmail.com', 587)
+        server.starttls()  # Cripta la connessione
+        server.login(user, password)
+        server.send_message(msg)
+        server.quit()
+        print("Mail inviata con successo!")
+    except Exception as e:
+        print(f"Errore invio mail: {e}")
+
+
+if __name__ == "__main__":
+    url_test = "https://www.transfermarkt.it/federico-pace/leistungsdatendetails/spieler/469899"
+    url_bs = "https://www.transfermarkt.it/potenza-calcio/startseite/verein/7197"
+    report = analizza_e_stampa_risultato(url_test)
+
+    print(report)
+    invia_mail(report)

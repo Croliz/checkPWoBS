@@ -2,8 +2,8 @@ name: Check Scraping and Email
 
 on:
   schedule:
-    - cron: '0 8 * * *' # Gira ogni mattina alle 8:00
-  workflow_dispatch:      # Ti permette di avviarlo a mano con un tasto
+    - cron: '0 8 * * *'
+  workflow_dispatch:
 
 jobs:
   build:
@@ -21,21 +21,8 @@ jobs:
         run: |
           pip install requests beautifulsoup4
 
-      - name: Esegui Script
-        run: python main.py > result.txt
-
-      - name: Invia Mail
-        uses: dawidd6/action-send-mail@v3
-        with:
-          server_address: smtp.gmail.com
-          server_port: 465
-          username: ${{ secrets.MAIL_USERNAME }}
-          password: ${{ secrets.MAIL_PASSWORD }}
-          subject: Report Scraping Transfermarkt
-          to: tua_mail@esempio.com
-          from: GitHub Actions
-          body: |
-            L'analisi è stata completata. 
-            Ecco il risultato:
-            ${{ steps.run_script.outputs.result }}
-          attachments: result.txt
+      - name: Esegui Script e Invia Mail
+        env:
+          MAIL_USERNAME: ${{ secrets.MAIL_USERNAME }}
+          MAIL_PASSWORD: ${{ secrets.MAIL_PASSWORD }}
+        run: python main.py
