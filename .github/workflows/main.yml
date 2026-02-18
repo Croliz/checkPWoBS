@@ -2,7 +2,7 @@ name: Check Scraping and Email
 
 on:
   schedule:
-    - cron: '20 23 * * *'
+    - cron: '0 6 * * *'
   workflow_dispatch:
 
 jobs:
