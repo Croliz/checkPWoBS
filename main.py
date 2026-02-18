@@ -61,7 +61,7 @@ def invia_mail(testo_report):
 
     msg = EmailMessage()
     msg.set_content(testo_report)
-    msg['Subject'] = 'Report Analisi Scraping Transfermarkt'
+    msg['Subject'] = 'Report Analisi Scraping TM'
     msg['From'] = user
     msg['To'] = user
 
