@@ -81,7 +81,9 @@ if __name__ == "__main__":
     lista_analisi = [
         {"url": "https://www.transfermarkt.it/serie-a/startseite/wettbewerb/IT1", "label": "Competizioni"},
         {"url": "https://www.transfermarkt.it/potenza-calcio/startseite/verein/7197", "label": "Squadre"},
-        {"url": "https://www.transfermarkt.it/federico-pace/leistungsdatendetails/spieler/469899", "label": "Giocatori"}
+        {"url": "https://www.transfermarkt.it/federico-pace/leistungsdatendetails/spieler/469899", "label": "Giocatori"},
+        {"url": "https://www.transfermarkt.it/pietro-de-giorgio/stationen/trainer/84647/plus/1", "label": "Allenatori"},
+        {"url": "https://www.transfermarkt.it/eduard-spertsyan/nationalmannschaft/spieler/515744/verein_id/6219/hauptwettbewerb//wettbewerb_id//start/2021-03-31/ende/2025-12-12/nurEinsatz/0/plus/1", "label": "Giocatori Nazionali"}
     ]
 
     report_finale = "REPORT ANALISI TM\n\n"
